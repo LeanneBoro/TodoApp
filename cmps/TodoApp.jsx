@@ -8,8 +8,10 @@ const { useEffect, useState } = React
 
 export function TodoApp() {
 
+
+
     const [todos, setTodos] = useState(null)
-    const [filterBy, setFilterBy] = useState(' ')
+    // const [filterBy, setFilterBy] = useState(' ')
 
     useEffect(() => {
         loadTodos()
@@ -17,9 +19,8 @@ export function TodoApp() {
 
     function loadTodos() {
         todoService
-            .query(filterBy)
-            .then(setTodos())
-            .catch(err => console.log('Had issues', err))
+            .query()
+            .then(todos => setTodos(todos))
     }
 
     console.log(todos)

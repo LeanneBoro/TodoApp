@@ -1,54 +1,89 @@
-import { storageService } from "./async-storage.service.js"
-import { utilService } from "./util-service.js"
+const TODOS_KEY = 'myTodos'
+const PAGE_SIZE = 8
+import { storageService } from '../services/async-storage.service.js'
+// import { userService } from './user.service.js'
 
 export const todoService = {
     query,
-    remove,
-    save
+    save,
+    removeTodo,
+    getTodoById,
+    debounce
 }
 
-_createTodos()
-const TODO_KEY = 'todoDB'
 
-function query(filterBy) {
-
-    return storageService.query(TODO_KEY)
+function query(filterBy = { txt: '', isDone: 'all', pageIdx: 0 }) {
+    return storageService.query(TODOS_KEY)
         .then(todos => {
+            if (filterBy.txt) {
+                const regex = new RegExp(filterBy.txt, 'i')
+                todos = todos.filter(todo => regex.test(todo.txt))
+            }
+            if (filterBy.isDone !== 'all') {
+                todos = todos.filter((todo) => (filterBy.isDone === 'done' ? todo.isDone : !todo.isDone))
+            }
+            if (filterBy.pageIdx !== undefined) {
+                const startIdx = filterBy.pageIdx * PAGE_SIZE
+                todos = todos.slice(startIdx, PAGE_SIZE + startIdx)
+            }
             return todos
         })
-
 }
 
-
-function remove(todoId) {
-    return storageService.remove(TODO_KEY, todoId)
+function getTodoById(id) {
+    return storageService.get(TODOS_KEY, id)
 }
-
 
 function save(todo) {
-    if (todo.id) {
-        return storageService.put(TODO_KEY, todo)
+    if (todo._id) {
+        return storageService.put(TODOS_KEY, todo).then((savedTodo) => {
+            userService.addActivity('Updated', savedTodo._id)
+            return savedTodo
+        })
     } else {
-        return storageService.post(TODO_KEY, todo)
+        todo.isDone = false
+        todo.createdAt = Date.now()
+        return storageService.post(TODOS_KEY, todo).then((savedTodo) => {
+            userService.addActivity('Added', savedTodo._id)
+            return savedTodo
+        })
     }
 }
 
-
-function _createTodos() {
-    let todos = utilService.loadFromStorage(TODO_KEY)
-    if (!todos || !todos.length) {
-        todos = []
-        todos.push(_createTodo('Go Shopping', false))
-        todos.push(_createTodo('Make Dinner', false))
-        todos.push(_createTodo('Understand node', false))
-        todos.push(_createTodo('Live laugh love', true))
-        utilService.saveToStorage(TODO_KEY, todos)
-    }
+function removeTodo(todoId) {
+    return storageService.remove(TODOS_KEY, todoId).then(() => {
+        userService.addActivity('Removed', todoId)
+    })
 }
 
-function _createTodo(txt, isDone = false) {
-    return {
-        txt: txt,
-        isDone: isDone
+function _makeId(length = 5) {
+    var txt = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (var i = 0; i < length; i++) {
+        txt += possible.charAt(Math.floor(Math.random() * possible.length));
     }
+    return txt;
 }
+
+function debounce(func, wait) {
+    let timeout;
+
+    return function executedFunction(...args) {
+        const later = () => {
+            timeout = null;
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
+
+
+// DEMO TODOS
+storageService.post(TODOS_KEY, { txt: "Something Important", isDone: false, createdAt: new Date(2023, 8, 12).getTime(), _id: "4x9VI" })
+    .then(() => {
+        storageService.post(TODOS_KEY, { txt: "Become a developer", isDone: false, createdAt: new Date(2024, 2, 20).getTime(), _id: "hB9u1" })
+            .then(() => {
+                storageService.post(TODOS_KEY, { txt: "Make a sandwich", isDone: true, createdAt: new Date(2024, 0, 5).getTime(), _id: "1ks8B" })
+            })
+    })
