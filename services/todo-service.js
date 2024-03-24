@@ -80,10 +80,10 @@ function debounce(func, wait) {
 
 
 // DEMO TODOS
-storageService.post(TODOS_KEY, { txt: "Something Important", isDone: false, createdAt: new Date(2023, 8, 12).getTime(), _id: "4x9VI" })
-    .then(() => {
-        storageService.post(TODOS_KEY, { txt: "Become a developer", isDone: false, createdAt: new Date(2024, 2, 20).getTime(), _id: "hB9u1" })
-            .then(() => {
-                storageService.post(TODOS_KEY, { txt: "Make a sandwich", isDone: true, createdAt: new Date(2024, 0, 5).getTime(), _id: "1ks8B" })
-            })
-    })
+// storageService.post(TODOS_KEY, { txt: "Something Important", isDone: false, createdAt: new Date(2023, 8, 12).getTime(), _id: "4x9VI" })
+//     .then(() => {
+//         storageService.post(TODOS_KEY, { txt: "Become a developer", isDone: false, createdAt: new Date(2024, 2, 20).getTime(), _id: "hB9u1" })
+//             .then(() => {
+//                 storageService.post(TODOS_KEY, { txt: "Make a sandwich", isDone: true, createdAt: new Date(2024, 0, 5).getTime(), _id: "1ks8B" })
+//             })
+//     })

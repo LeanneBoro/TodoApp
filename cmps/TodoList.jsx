@@ -1,9 +1,11 @@
 
 
-export function TodoList() {
-    return (
-        <section>
-            <h1>list list list</h1>
-        </section>
+export function TodoList({todos}) {
+
+    return (<ul>
+        {todos.map((todo) =>
+        <li key={todo._id}>{todo.txt}</li>
+        )}
+    </ul>
     )
 }
