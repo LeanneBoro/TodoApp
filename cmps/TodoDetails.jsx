@@ -23,14 +23,14 @@ export function TodoDetails() {
     const { _id, txt, isDone, createdAt } = currTodo
     const formattedDate = new Date(createdAt).toLocaleString('he')
     return (
-        <div className="todo-details flex scale-in-hor-right container">
-            <div className="todo-data-container">
+        <div>
+            <div>
                 <h1>To Do: {txt}</h1>
                 <h2>Created at: {formattedDate}</h2>
                 <h2>is done? {isDone ? 'yes' : 'no'}</h2>
                 <h2>Id: {_id}</h2>
 
-                <button className="back-btn" onClick={() => navigate('/todo')}>
+                <button onClick={() => navigate('/todo')}>
                     Back to todos
                 </button>
             </div>
