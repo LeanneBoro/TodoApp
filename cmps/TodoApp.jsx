@@ -31,12 +31,15 @@ export function TodoApp() {
         console.log('remove')
     }
 
-    console.log(todos)
+    function onSetFilter() {
+        console.log('got filter!')
+    }
+
     if (!todos) return <div>Loading..</div>
     return (
         <section>
             <h1>to do...to do...</h1>
-            <TodoFilter />
+            <TodoFilter onSetFilter={onSetFilter}/>
             <div className='main-container'>
                 <img src="./assets/img/panther.jpg"></img>
                 <TodoList todos={todos} onRemove={onRemove} onUpdateTodo={onUpdateTodo}/>
