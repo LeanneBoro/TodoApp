@@ -23,6 +23,14 @@ export function TodoApp() {
             .then(todos => setTodos(todos))
     }
 
+    function onUpdateTodo() {
+        console.log('app')
+    }
+
+    function onRemove() {
+        console.log('remove')
+    }
+
     console.log(todos)
     if (!todos) return <div>Loading..</div>
     return (
@@ -31,7 +39,7 @@ export function TodoApp() {
             <TodoFilter />
             <div className='main-container'>
                 <img src="./assets/img/panther.jpg"></img>
-                <TodoList todos={todos} />
+                <TodoList todos={todos} onRemove={onRemove} onUpdateTodo={onUpdateTodo}/>
             </div>
         </section>
     )

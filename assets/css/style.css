@@ -8,3 +8,12 @@
 .main-container img {
     width: 600px;
 }
+
+.done {
+    text-decoration: line-through;
+    color:grey;
+    cursor: pointer;
+}
+
+
+
